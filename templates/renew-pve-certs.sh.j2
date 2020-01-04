@@ -1,0 +1,5 @@
+#!/bin/bash
+
+/bin/cp /etc/letsencrypt/live/{{ pve_fqdn }}/privkey.pem   /etc/pve/local/pve-ssl.key
+/bin/cp /etc/letsencrypt/live/{{ pve_fqdn }}/fullchain.pem /etc/pve/local/pve-ssl.pem
+systemctl restart pveproxy

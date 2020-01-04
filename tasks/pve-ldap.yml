@@ -1,0 +1,43 @@
+---
+- name: Create a ldap directory /etc/pve/priv/ldap
+  file:
+    path: /etc/pve/priv/ldap
+    state: directory
+
+- name: Create domains.cf configuration file
+  file:
+    path: "/etc/pve/domains.cfg"
+    mode: 0640
+    owner: root
+    group: www-data
+    state: touch
+
+- name: Create necessary configuration files.
+  file:
+    path: "/etc/pve/priv/ldap/{{ ldap_realm_name }}.pw"
+    mode: 0600
+    owner: root
+    group: www-data
+    state: touch
+
+- name: Add LDAP configuration file.
+  blockinfile:
+    path: /etc/pve/domains.cfg
+    block: |
+      ldap: {{ ldap_realm_name }}
+              comment LDAP authentication
+              base_dn {{ ldap_base_dn }}
+              server1 {{ ldap_server1 }}
+              server2 {{ ldap_server2 }}
+              user_attr {{ ldap_user_attr }}
+              bind_dn {{ ldap_bind_dn }}
+              default {{ default_auth }}
+              port {{ ldap_port }}
+              secure {{ ldap_secure }}
+
+- name: Add LDAP bind_dn password.
+  lineinfile:
+    path: /etc/pve/priv/ldap/{{ ldap_realm_name }}.pw
+    line: "{{ ldap_bind_pass }}"
+    state: present
+...

@@ -1,0 +1,26 @@
+---
+# Remove pop up window with "No valid subscriptio"
+remove_nag: True
+
+# Remove enterprise repo. The option get no error in apt update
+remove_enterprise_repo: True
+
+# Install letsencrypt certificate 
+pve_ssl_letsencrypt: True
+pve_fqdn: "{{ inventory_hostname }}"
+pve_admin_email: "admin@example.com"
+
+# Enable LDAP realm
+pve_ldap_connect: True
+ldap_realm_name: "lab.example.com"
+ldap_server1: "ldap1.lab.example.com"
+# If you have only one LDAP server, just set [] in ldap_server2
+ldap_server2: "ldap2.lab.example.com"
+ldap_port: "636"
+ldap_secure: "1"
+ldap_base_dn: "ou=people,dc=lab,dc=example,dc=com"
+ldap_user_attr: "uid"
+ldap_bind_dn: "cn=bind-user,dc=lab,dc=example,dc=com"
+ldap_bind_pass: "password"
+default_auth: "1"
+...

@@ -1,0 +1,17 @@
+---
+- name: removes subscription nag box
+  include: remove-nag.yml
+  when: remove_nag | bool
+
+- name: remove enterprise repos
+  include: remove-enterprise-repo.yml
+  when: remove_enterprise_repo | bool
+
+- name: Configure LDAP realm settings
+  include: pve-ldap.yml
+  when: pve_ldap_connect | bool
+
+- name: Install letsencrypt cert
+  include: pve-ssl-letsencrypt.yml
+  when: remove_enterprise_repo | bool
+...

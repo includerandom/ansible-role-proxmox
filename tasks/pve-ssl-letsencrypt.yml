@@ -1,0 +1,25 @@
+---
+- name: Install Proxmox Let's Encrypt post-hook script
+  template:
+    src: renew-pve-certs.sh.j2
+    dest: /usr/local/bin/renew-pve-certs.sh
+    mode: u+rwx
+
+- name: Request Let's Encrypt certificate for {{ pve_fqdn }}
+  include_role:
+    name: ansible-role-certbot
+  vars:
+        certbot_certs:
+          - email: "{{ pve_admin_email }}"
+            domains:
+              - "{{ pve_fqdn }}"
+        certbot_create_standalone_stop_services: []
+        certbot_create_if_missing: true
+        certbot_create_method: standalone
+        certbot_auto_renew: true
+        certbot_cert_rsa_key_size: 2048
+        certbot_renew_post_hook: "--deploy-hook /usr/local/bin/renew-pve-certs.sh"
+
+- name: Copy cert files and restart pveproxy
+  command: /usr/local/bin/renew-pve-certs.sh
+...
